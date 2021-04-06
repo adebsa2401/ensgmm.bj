@@ -1,7 +1,31 @@
 security:
+    encoders:
+        App\Entity\Student:
+            algorithm: auto
+        App\Entity\Admin:
+            algorithm: auto
+        App\Security\User:
+            algorithm: auto
+
+
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        student_user:
+            entity:
+              class: App\Entity\Student
+              property: email | matricule
+
+        admin_user:
+            entity:
+              class: App\Entity\Admin
+              property: email
+
+        all_users:
+          chain:
+            providers: [student_user, admin_user]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -9,7 +33,16 @@ security:
         main:
             anonymous: true
             lazy: true
-            provider: users_in_memory
+            provider: all_users
+            guard:
+                authenticators:
+                    - App\Security\StudentAuthenticator
+                    - App\Security\AdminAuthenticator
+                entry_point: App\Security\StudentAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
