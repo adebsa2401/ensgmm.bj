@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\StudentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
+ * @UniqueEntity(fields = {"email", "matricule"}, message ="This identifier is already in use")
  */
 class Student implements UserInterface
 {
@@ -33,6 +35,21 @@ class Student implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="integer", unique=true)
+     */
+    private $matricule;
 
     public function getId(): ?int
     {
@@ -113,5 +130,41 @@ class Student implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getMatricule(): ?int
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(int $matricule): self
+    {
+        $this->matricule = $matricule;
+
+        return $this;
     }
 }
