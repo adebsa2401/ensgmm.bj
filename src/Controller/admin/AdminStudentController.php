@@ -6,10 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/admin/students")
+ */
 class AdminStudentController extends AbstractController
 {
     /**
-     * @Route("/admin/student", name="admin_student")
+     * @Route("/", name="admin_students_home", methods={"GET"})
      */
     public function index(): Response
     {
@@ -20,6 +23,8 @@ class AdminStudentController extends AbstractController
 
     /**
      * edit a student account settings if granted required authorisation
+     * 
+     * @Route("/{id}/edit", name="admin_students_edit", methods={"GET", "PUT"})
      */
     public function edit():Response {
         return new Response;
@@ -27,6 +32,8 @@ class AdminStudentController extends AbstractController
 
     /**
      * show a student profile
+     * 
+     * @Route("/{id}", name="admin_students_show", methods={"GET"})
      */
     public function show():Response {
         return new Response;
@@ -34,22 +41,19 @@ class AdminStudentController extends AbstractController
 
     /**
      * delete an student account if granted required authorisation
+     * 
+     * @Route("/{id}", name="admin_students_delete", methods={"DELETE"})
      */
     public function delete():Response {
         return new Response;
     }
 
     /**
-     * grant student an admin role
-     */
-    public function setRole():Response {
-        return new Response;
-    }
-
-    /**
      * send mail to the student
+     * 
+     * @Route("/{id}/send-mail", name="admin_students_sendMail", methods={"POST"})
      */
-    public function mail():Response {
+    public function sendMail():Response {
         return new Response;
     }
 }

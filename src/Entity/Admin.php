@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=AdminRepository::class)
  * @UniqueEntity(fields = {"email"}, message ="An account already exists with this email address")
+ * @ORM\Table(name="admins")
  */
 class Admin implements UserInterface
 {

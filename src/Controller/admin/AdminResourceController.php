@@ -6,10 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/admin/resources")
+ */
 class AdminResourceController extends AbstractController
 {
     /**
-     * @Route("/admin/resource", name="admin_resource")
+     * @Route("/", name="admin_resources_home", methods={"GET"})
      */
     public function index(): Response
     {
@@ -20,6 +23,8 @@ class AdminResourceController extends AbstractController
 
     /**
      * create a resource
+     * 
+     * @Route("/create", name="admin_resources_create", methods={"GET", "POST"})
      */
     public function create():Response {
         return new Response;
@@ -27,6 +32,8 @@ class AdminResourceController extends AbstractController
 
     /**
      * show a resource
+     * 
+     * @Route("/{id}", name="admin_resources_show", methods={"GET"})
      */
     public function show():Response {
         return new Response;
@@ -34,6 +41,8 @@ class AdminResourceController extends AbstractController
 
     /**
      * edit a resource
+     * 
+     * @Route("/{id}/edit", name="admin_resources_edit", methods={"GET", "PUT"})
      */
     public function edit():Response {
         return new Response;
@@ -41,6 +50,8 @@ class AdminResourceController extends AbstractController
 
     /**
      * delete a resource if granted required authorisation
+     * 
+     * @Route("/{id}", name="admin_resources_delete", methods={"DELETE"})
      */
     public function delete():Response {
         return new Response;

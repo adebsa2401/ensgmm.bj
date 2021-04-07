@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
  * @UniqueEntity(fields = {"email", "matricule"}, message ="This identifier is already in use")
+ * @ORM\Table(name="students")
  */
 class Student implements UserInterface
 {

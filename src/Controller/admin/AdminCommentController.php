@@ -6,10 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/admin/articles/{article_id}/comments")
+ */
 class AdminCommentController extends AbstractController
 {
     /**
-     * @Route("/admin/comment", name="admin_comment")
+     * @Route("/", name="admin_comments_home", methods={"GET"})
      */
     public function index(): Response
     {
@@ -20,6 +23,8 @@ class AdminCommentController extends AbstractController
 
     /**
      * Edit a comment if granted required athorisation
+     * 
+     * @Route("/{comment_id}/edit", name="admin_comments_edit", methods={"GET", "PUT"})
      */
     public function edit(): Response {
         return new Response;
@@ -27,6 +32,8 @@ class AdminCommentController extends AbstractController
 
     /**
      * show a given comment
+     * 
+     * @Route("/{comment_id}", name="admin_comments_show", methods={"GET"})
      */
     public function show(): Response {
         return new Response;
@@ -34,6 +41,8 @@ class AdminCommentController extends AbstractController
 
     /**
      * delete a comment if granted required authorisation
+     * 
+     * @Route("/{comment_id}", name="admin_comments_delete", methods={"DELETE"})
      */
     public function delete(): Response {
         return new Response;

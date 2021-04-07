@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ResourceCategoryRepository::class)
+ * @ORM\Table(name="resources_categories")
  */
 class ResourceCategory
 {

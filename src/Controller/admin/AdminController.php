@@ -7,10 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @Route("/admin")
+ */
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/login", name="admin_login", methods={"GET", "POST"})
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -27,7 +30,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/logout", name="admin_logout", methods={"GET"})
      */
     public function logout()
     {
@@ -36,6 +39,8 @@ class AdminController extends AbstractController
 
     /**
      * show an admin profile
+     * 
+     * @Route("/admins/{id}", name="admin_admins_show", methods={"GET"})
      */
     public function show(): Response {
         return new Response;
@@ -43,6 +48,8 @@ class AdminController extends AbstractController
 
     /**
      * delete an admin account if granted required authorisation
+     * 
+     * @Route("/admins/{id}", name="admin_admins_delete", methods={"DELETE"})
      */
     public function delete():Response {
         return new Response;
@@ -50,22 +57,19 @@ class AdminController extends AbstractController
 
     /**
      * edit an admin account settings if granted required authorisation
+     * 
+     * @Route("/admins/{id}/edit", name="admin_admins_edit", methods={"GET", "PUT"})
      */
     public function edit():Response {
         return new Response;
     }
 
     /**
-     * set an admin role
-     */
-    public function setRole():Response {
-        return new Response;
-    }
-
-    /**
      * send mail to an admin
+     * 
+     * @Route("/admins/{id}/send-mail", name="admin_admins_sendMail", methods={"POST"})
      */
-    public function mail():Response {
+    public function sendMail():Response {
         return new Response;
     }
 }
