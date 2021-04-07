@@ -33,4 +33,32 @@ class StudentController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    /**
+     * register a new student
+     */
+    public function register():Response {
+        return new Response;
+    }
+
+    /**
+     * edit student user account
+     */
+    public function edit():Response {
+        return new Response;
+    }
+
+    /**
+     * show student profile
+     */
+    public function show():Response {
+        return new Response;
+    }
+
+    /**
+     * delete student user account if granted required authorisation
+     */
+    public function delete():Response {
+        return new Response;
+    }
 }

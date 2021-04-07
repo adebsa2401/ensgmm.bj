@@ -64,6 +64,21 @@ class Article
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $commentable;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $seeAlso = [];
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -196,6 +211,42 @@ class Article
                 $comment->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getCommentable(): ?bool
+    {
+        return $this->commentable;
+    }
+
+    public function setCommentable(bool $commentable): self
+    {
+        $this->commentable = $commentable;
+
+        return $this;
+    }
+
+    public function getSeeAlso(): ?array
+    {
+        return $this->seeAlso;
+    }
+
+    public function setSeeAlso(?array $seeAlso): self
+    {
+        $this->seeAlso = $seeAlso;
 
         return $this;
     }

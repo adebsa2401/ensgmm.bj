@@ -17,4 +17,25 @@ class AdminCommentController extends AbstractController
             'controller_name' => 'AdminCommentController',
         ]);
     }
+
+    /**
+     * Edit a comment if granted required athorisation
+     */
+    public function edit(): Response {
+        return new Response;
+    }
+
+    /**
+     * show a given comment
+     */
+    public function show(): Response {
+        return new Response;
+    }
+
+    /**
+     * delete a comment if granted required authorisation
+     */
+    public function delete(): Response {
+        return new Response;
+    }
 }

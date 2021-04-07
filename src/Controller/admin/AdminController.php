@@ -33,4 +33,39 @@ class AdminController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    /**
+     * show an admin profile
+     */
+    public function show(): Response {
+        return new Response;
+    }
+
+    /**
+     * delete an admin account if granted required authorisation
+     */
+    public function delete():Response {
+        return new Response;
+    }
+
+    /**
+     * edit an admin account settings if granted required authorisation
+     */
+    public function edit():Response {
+        return new Response;
+    }
+
+    /**
+     * set an admin role
+     */
+    public function setRole():Response {
+        return new Response;
+    }
+
+    /**
+     * send mail to an admin
+     */
+    public function mail():Response {
+        return new Response;
+    }
 }

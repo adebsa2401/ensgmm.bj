@@ -51,6 +51,16 @@ class Student implements UserInterface
      */
     private $matricule;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $mailVerified;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -164,6 +174,30 @@ class Student implements UserInterface
     public function setMatricule(int $matricule): self
     {
         $this->matricule = $matricule;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getMailVerified(): ?bool
+    {
+        return $this->mailVerified;
+    }
+
+    public function setMailVerified(bool $mailVerified): self
+    {
+        $this->mailVerified = $mailVerified;
 
         return $this;
     }

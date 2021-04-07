@@ -46,6 +46,16 @@ class Admin implements UserInterface
      */
     private $lastName;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $mailVerified;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -147,6 +157,30 @@ class Admin implements UserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getMailVerified(): ?bool
+    {
+        return $this->mailVerified;
+    }
+
+    public function setMailVerified(bool $mailVerified): self
+    {
+        $this->mailVerified = $mailVerified;
 
         return $this;
     }

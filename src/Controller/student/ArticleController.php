@@ -17,4 +17,18 @@ class ArticleController extends AbstractController
             'controller_name' => 'ArticleController',
         ]);
     }
+
+    /**
+     * show an article
+     */
+    public function show():Response {
+        return new Response;
+    }
+
+    /**
+     * create Comment Entity for a given article if commentable
+     */
+    public function comment():Response {
+        return new Response;
+    }
 }

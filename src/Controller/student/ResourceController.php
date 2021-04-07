@@ -17,4 +17,32 @@ class ResourceController extends AbstractController
             'controller_name' => 'ResourceController',
         ]);
     }
+
+    /**
+     * Create a resource
+     */
+    public function create():Response {
+        return new Response;
+    }
+
+    /**
+     * Edit a resource (editing request should be sent first)
+     */
+    public function edit():Response {
+        return new Response;
+    }
+
+    /**
+     * show a resource
+     */
+    public function show():Response {
+        return new Response;
+    }
+
+    /**
+     * download a resource
+     */
+    public function download():Response {
+        return new Response;
+    }
 }

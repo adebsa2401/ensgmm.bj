@@ -17,4 +17,32 @@ class AdminResourceController extends AbstractController
             'controller_name' => 'AdminResourceController',
         ]);
     }
+
+    /**
+     * create a resource
+     */
+    public function create():Response {
+        return new Response;
+    }
+
+    /**
+     * show a resource
+     */
+    public function show():Response {
+        return new Response;
+    }
+
+    /**
+     * edit a resource
+     */
+    public function edit():Response {
+        return new Response;
+    }
+
+    /**
+     * delete a resource if granted required authorisation
+     */
+    public function delete():Response {
+        return new Response;
+    }
 }

@@ -47,6 +47,16 @@ class Resource
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $seeAlso = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +130,30 @@ class Resource
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getSeeAlso(): ?array
+    {
+        return $this->seeAlso;
+    }
+
+    public function setSeeAlso(?array $seeAlso): self
+    {
+        $this->seeAlso = $seeAlso;
 
         return $this;
     }

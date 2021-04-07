@@ -17,4 +17,39 @@ class AdminArticleController extends AbstractController
             'controller_name' => 'AdminArticleController',
         ]);
     }
+
+    /**
+     * Create an article if granted required authorisation
+     */
+    public function create(): Response {
+        return new Response;
+    }
+
+    /**
+     * Edit an article if granted required authorisation
+     */
+    public function edit(): Response {
+        return new Response;
+    }
+
+    /**
+     * Show a given article
+     */
+    public function show(): Response {
+        return new Response;
+    }
+
+    /**
+     * Create Comment entity for a given article
+     */
+    public function comment(): Response {
+        return new Response;
+    }
+
+    /**
+     * Delete a given article if granted required authorisation
+     */
+    public function delete(): Response {
+        return new Response;
+    }
 }
