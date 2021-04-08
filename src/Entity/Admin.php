@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -56,6 +58,22 @@ class Admin implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $mailVerified;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="createdBy")
+     */
+    private $articles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="createdByAdmin")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -182,6 +200,66 @@ class Admin implements UserInterface
     public function setMailVerified(bool $mailVerified): self
     {
         $this->mailVerified = $mailVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Article[]
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): self
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles[] = $article;
+            $article->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getCreatedBy() === $this) {
+                $article->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setCreatedByAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getCreatedByAdmin() === $this) {
+                $comment->setCreatedByAdmin(null);
+            }
+        }
 
         return $this;
     }

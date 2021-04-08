@@ -43,7 +43,6 @@ class AdminController extends AbstractController
      * show an admin profile
      * 
      * @Route("/admins/{id}", name="admin_admins_show", methods={"GET"})
-     * @IsGranted("SHOW_PROFILE", "admin")
      */
     public function show(Admin $admin): Response {
         return new Response;

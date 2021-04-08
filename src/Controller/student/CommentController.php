@@ -56,7 +56,7 @@ class CommentController extends AbstractController
      * comment an existing comment
      * 
      * @Route("/{comment_id}/comment",name="app_comments_comment", methods={"POST"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_USER")
      */
     public function comment(): Response {
         return new Response;

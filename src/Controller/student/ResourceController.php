@@ -27,7 +27,7 @@ class ResourceController extends AbstractController
      * Create a resource
      * 
      * @Route("/create", name="app_resources_create", methods={"GET", "POST"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_USER")
      */
     public function create():Response {
         return new Response;
@@ -37,7 +37,7 @@ class ResourceController extends AbstractController
      * Edit a resource (editing request should be sent first)
      * 
      * @Route("/{id}/edit", name="app_resources_edit", methods={"GET", "PUT"})
-     * @IsGranted("RESOURCE_EDIT", "resource")
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Resource $resource):Response {
         return new Response;

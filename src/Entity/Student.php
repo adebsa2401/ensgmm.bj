@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -61,6 +63,16 @@ class Student implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $mailVerified;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="createdByStudent")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -199,6 +211,36 @@ class Student implements UserInterface
     public function setMailVerified(bool $mailVerified): self
     {
         $this->mailVerified = $mailVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setCreatedByStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getCreatedByStudent() === $this) {
+                $comment->setCreatedByStudent(null);
+            }
+        }
 
         return $this;
     }

@@ -51,6 +51,16 @@ class Comment
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Admin::class, inversedBy="comments")
+     */
+    private $createdByAdmin;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="comments")
+     */
+    private $createdByStudent;
+
     public function __construct()
     {
         $this->childComments = new ArrayCollection();
@@ -147,6 +157,30 @@ class Comment
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedByAdmin(): ?Admin
+    {
+        return $this->createdByAdmin;
+    }
+
+    public function setCreatedByAdmin(?Admin $createdByAdmin): self
+    {
+        $this->createdByAdmin = $createdByAdmin;
+
+        return $this;
+    }
+
+    public function getCreatedByStudent(): ?Student
+    {
+        return $this->createdByStudent;
+    }
+
+    public function setCreatedByStudent(?Student $createdByStudent): self
+    {
+        $this->createdByStudent = $createdByStudent;
 
         return $this;
     }

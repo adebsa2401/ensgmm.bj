@@ -45,7 +45,6 @@ class AdminResourceController extends AbstractController
      * edit a resource
      * 
      * @Route("/{id}/edit", name="admin_resources_edit", methods={"GET", "PUT"})
-     * @IsGranted("EDIT_RESOURCE", "resource")
      */
     public function edit(Resource $resource):Response {
         return new Response;
@@ -55,7 +54,7 @@ class AdminResourceController extends AbstractController
      * delete a resource if granted required authorisation
      * 
      * @Route("/{id}", name="admin_resources_delete", methods={"DELETE"})
-     * @IsGranted("DELETE_RESOURCE", "resource")
+     * @IsGranted("RESOURCE_DELETE", "resource")
      */
     public function delete(Resource $resource):Response {
         return new Response;

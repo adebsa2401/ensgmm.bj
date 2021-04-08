@@ -80,6 +80,12 @@ class Article
      */
     private $seeAlso = [];
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Admin::class, inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -216,7 +222,7 @@ class Article
         return $this;
     }
 
-    public function getActive(): ?bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -228,7 +234,7 @@ class Article
         return $this;
     }
 
-    public function getCommentable(): ?bool
+    public function isCommentable(): ?bool
     {
         return $this->commentable;
     }
@@ -248,6 +254,18 @@ class Article
     public function setSeeAlso(?array $seeAlso): self
     {
         $this->seeAlso = $seeAlso;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?Admin
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?Admin $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
