@@ -2,9 +2,11 @@
 
 namespace App\Controller\admin;
 
+use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/articles/{article_id}/comments")
@@ -25,8 +27,9 @@ class AdminCommentController extends AbstractController
      * Edit a comment if granted required athorisation
      * 
      * @Route("/{comment_id}/edit", name="admin_comments_edit", methods={"GET", "PUT"})
+     * @IsGranted("EDIT_COMMENT", "comment")
      */
-    public function edit(): Response {
+    public function edit(Comment $comment): Response {
         return new Response;
     }
 
@@ -43,8 +46,9 @@ class AdminCommentController extends AbstractController
      * delete a comment if granted required authorisation
      * 
      * @Route("/{comment_id}", name="admin_comments_delete", methods={"DELETE"})
+     * @IsGranted("DELETE_COMMENT", "comment")
      */
-    public function delete(): Response {
+    public function delete(Comment $comment): Response {
         return new Response;
     }
 }

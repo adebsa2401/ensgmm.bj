@@ -25,6 +25,7 @@ class StudentAuthenticator extends AbstractFormLoginAuthenticator implements Pas
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    public const IDENTIFIERS = ['email', 'matricule'];
 
     private $entityManager;
     private $urlGenerator;
@@ -48,13 +49,13 @@ class StudentAuthenticator extends AbstractFormLoginAuthenticator implements Pas
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'email' => $request->request->get('email'),
+            'identifier' => $request->request->get('identifier'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['email']
+            $credentials['identifier']
         );
 
         return $credentials;
@@ -67,11 +68,14 @@ class StudentAuthenticator extends AbstractFormLoginAuthenticator implements Pas
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(Student::class)->findOneBy(['email' => $credentials['email']]);
+        foreach(self::IDENTIFIERS as $identifier) {
+            if($user = $this->entityManager->getRepository(Student::class)->findOneBy([$identifier => $credentials['identifier']]))
+                break;
+        }
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Email/Matricule could not be found.');
         }
 
         return $user;

@@ -2,9 +2,11 @@
 
 namespace App\Controller\student;
 
+use App\Entity\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/resources")
@@ -25,6 +27,7 @@ class ResourceController extends AbstractController
      * Create a resource
      * 
      * @Route("/create", name="app_resources_create", methods={"GET", "POST"})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function create():Response {
         return new Response;
@@ -34,8 +37,9 @@ class ResourceController extends AbstractController
      * Edit a resource (editing request should be sent first)
      * 
      * @Route("/{id}/edit", name="app_resources_edit", methods={"GET", "PUT"})
+     * @IsGranted("RESOURCE_EDIT", "resource")
      */
-    public function edit():Response {
+    public function edit(Resource $resource):Response {
         return new Response;
     }
 

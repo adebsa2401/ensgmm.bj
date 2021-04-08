@@ -2,9 +2,11 @@
 
 namespace App\Controller\admin;
 
+use App\Entity\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/resources")
@@ -43,8 +45,9 @@ class AdminResourceController extends AbstractController
      * edit a resource
      * 
      * @Route("/{id}/edit", name="admin_resources_edit", methods={"GET", "PUT"})
+     * @IsGranted("EDIT_RESOURCE", "resource")
      */
-    public function edit():Response {
+    public function edit(Resource $resource):Response {
         return new Response;
     }
 
@@ -52,8 +55,9 @@ class AdminResourceController extends AbstractController
      * delete a resource if granted required authorisation
      * 
      * @Route("/{id}", name="admin_resources_delete", methods={"DELETE"})
+     * @IsGranted("DELETE_RESOURCE", "resource")
      */
-    public function delete():Response {
+    public function delete(Resource $resource):Response {
         return new Response;
     }
 }

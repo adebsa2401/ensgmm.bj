@@ -2,10 +2,12 @@
 
 namespace App\Controller\admin;
 
+use App\Entity\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin")
@@ -41,8 +43,9 @@ class AdminController extends AbstractController
      * show an admin profile
      * 
      * @Route("/admins/{id}", name="admin_admins_show", methods={"GET"})
+     * @IsGranted("SHOW_PROFILE", "admin")
      */
-    public function show(): Response {
+    public function show(Admin $admin): Response {
         return new Response;
     }
 
@@ -50,8 +53,9 @@ class AdminController extends AbstractController
      * delete an admin account if granted required authorisation
      * 
      * @Route("/admins/{id}", name="admin_admins_delete", methods={"DELETE"})
+     * @IsGranted("DELETE_ADMIN", "admin")
      */
-    public function delete():Response {
+    public function delete(Admin $admin):Response {
         return new Response;
     }
 
@@ -59,8 +63,9 @@ class AdminController extends AbstractController
      * edit an admin account settings if granted required authorisation
      * 
      * @Route("/admins/{id}/edit", name="admin_admins_edit", methods={"GET", "PUT"})
+     * @IsGranted("EDIT_ADMIN", "admin")
      */
-    public function edit():Response {
+    public function edit(Admin $admin):Response {
         return new Response;
     }
 

@@ -2,9 +2,11 @@
 
 namespace App\Controller\student;
 
+use App\Entity\Article;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/articles")
@@ -34,8 +36,9 @@ class ArticleController extends AbstractController
      * create Comment Entity for a given article if commentable
      * 
      * @Route("/{id}/comment",name="app_articles_comment", methods={"POST"})
+     * @IsGranted("COMMENT_ARTICLE", "article")
      */
-    public function comment():Response {
+    public function comment(Article $article):Response {
         return new Response;
     }
 }

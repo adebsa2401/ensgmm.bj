@@ -2,10 +2,12 @@
 
 namespace App\Controller\student;
 
+use App\Entity\Student;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/students")
@@ -41,6 +43,7 @@ class StudentController extends AbstractController
      * register a new student
      * 
      * @Route("/register", name="app_students_register", methods={"GET", "POST"})
+     * @IsGranted("IS_ANONYMOUS")
      */
     public function register():Response {
         return new Response;
@@ -50,8 +53,9 @@ class StudentController extends AbstractController
      * edit student user account
      * 
      * @Route("/{id}/profile/edit", name="app_students_edit_profile", methods={"GET", "PUT"})
+     * @IS_GRANTED("STUDENT_EDIT", "student")
      */
-    public function edit():Response {
+    public function edit(Student $student):Response {
         return new Response;
     }
 
@@ -68,8 +72,9 @@ class StudentController extends AbstractController
      * delete student user account if granted required authorisation
      * 
      * @Route("/{id}/delete", name="app_students_delete", methods={"DELETE"})
+     * @IsGranted("STUDENT_DELETE", "student")
      */
-    public function delete():Response {
+    public function delete(Student $student):Response {
         return new Response;
     }
 }

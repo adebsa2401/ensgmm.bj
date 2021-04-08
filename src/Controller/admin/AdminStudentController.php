@@ -5,6 +5,7 @@ namespace App\Controller\admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/students")
@@ -25,6 +26,7 @@ class AdminStudentController extends AbstractController
      * edit a student account settings if granted required authorisation
      * 
      * @Route("/{id}/edit", name="admin_students_edit", methods={"GET", "PUT"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit():Response {
         return new Response;
@@ -43,6 +45,7 @@ class AdminStudentController extends AbstractController
      * delete an student account if granted required authorisation
      * 
      * @Route("/{id}", name="admin_students_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete():Response {
         return new Response;
