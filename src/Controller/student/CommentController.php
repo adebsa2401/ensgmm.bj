@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\student;
+namespace App\Controller\Student;
 
 use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class CommentController extends AbstractController
 {
+    public const TEMPLATES_ROUTE_BASE = 'student/comment/';
+
     /**
      * @Route("/", name="app_comments_home", methods={"GET"})
      */

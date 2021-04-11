@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AdminStudentController extends AbstractController
 {
+    public const TEMPLATES_ROUTE_BASE = 'admin/student/';
+
     /**
      * @Route("/", name="admin_students_home", methods={"GET"})
      */

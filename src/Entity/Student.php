@@ -60,14 +60,14 @@ class Student implements UserInterface
     private $active;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $mailVerified;
-
-    /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="createdByStudent")
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -203,18 +203,6 @@ class Student implements UserInterface
         return $this;
     }
 
-    public function getMailVerified(): ?bool
-    {
-        return $this->mailVerified;
-    }
-
-    public function setMailVerified(bool $mailVerified): self
-    {
-        $this->mailVerified = $mailVerified;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Comment[]
      */
@@ -241,6 +229,18 @@ class Student implements UserInterface
                 $comment->setCreatedByStudent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

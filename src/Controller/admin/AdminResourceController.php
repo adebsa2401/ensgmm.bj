@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use App\Entity\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AdminResourceController extends AbstractController
 {
+    public const TEMPLATES_ROUTE_BASE = 'admin/resource/';
+
     /**
      * @Route("/", name="admin_resources_home", methods={"GET"})
      */

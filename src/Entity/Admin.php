@@ -57,7 +57,7 @@ class Admin implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $mailVerified;
+    private $isVerified;
 
     /**
      * @ORM\OneToMany(targetEntity=Article::class, mappedBy="createdBy")
@@ -192,14 +192,14 @@ class Admin implements UserInterface
         return $this;
     }
 
-    public function getMailVerified(): ?bool
+    public function isVerified(): bool
     {
-        return $this->mailVerified;
+        return $this->isVerified;
     }
 
-    public function setMailVerified(bool $mailVerified): self
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->mailVerified = $mailVerified;
+        $this->isVerified = $isVerified;
 
         return $this;
     }

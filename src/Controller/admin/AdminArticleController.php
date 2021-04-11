@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
@@ -9,14 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @Route("/admin/articles")
- */
+#[Route("/admin/articles")]
 class AdminArticleController extends AbstractController
 {
-    /**
-     * @Route("/", name="admin_articles_home", methods={"GET"})
-     */
+    public const TEMPLATES_ROUTE_BASE = 'admin/article/';
+
+    #[Route("/", name: "admin_articles_home", methods: ["GET"])]
     public function index(ArticleRepository $repo): Response
     {
         return $this->render('admin_article/index.html.twig', [
@@ -24,12 +22,8 @@ class AdminArticleController extends AbstractController
         ]);
     }
 
-    /**
-     * Create an article if granted required authorisation
-     * 
-     * @Route("/create", name="admin_articles_create", methods={"GET", "POST"})
-     * @IsGranted("ROLE_WRITER")
-     */
+    #[Route("/create", name: "admin_articles_create", methods: ["GET", "POST"])]
+    #[IsGranted("ROLE_WRITER")]
     public function create(): Response {
         return new Response;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\student;
+namespace App\Controller\Student;
 
 use App\Entity\Resource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class ResourceController extends AbstractController
 {
+    public const TEMPLATES_ROUTE_BASE = 'student/resource/';
+
     /**
      * @Route("/", name="app_resources_home", methods={"GET"})
      */
