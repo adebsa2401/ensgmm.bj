@@ -5,7 +5,9 @@ namespace App\Form;
 use App\Entity\Student;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -45,7 +47,7 @@ class StudentRegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('password_confirmation', PasswordType::class, [
+            ->add('passwordConfirmation', PasswordType::class, [
                 'mapped' => false,
                 'constraints' => []
             ])

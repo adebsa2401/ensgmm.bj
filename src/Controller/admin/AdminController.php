@@ -7,6 +7,7 @@ use App\Form\AdminLoginFormType;
 use App\Form\AdminRegistrationFormType;
 use App\Repository\AdminRepository;
 use App\Security\AdminAuthenticator;
+use App\Security\EmailVerifier;
 use App\Service\ConfirmCriticAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,13 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class AdminController extends AbstractController
 {
     public const TEMPLATES_ROUTE_BASE = 'admin/security/';
+
+    private $emailVerifier;
+
+    public function __construct(EmailVerifier $emailVerifier)
+    {
+        $this->emailVerifier = $emailVerifier;
+    }
 
     #[Route("/login", name: "admin_login", methods: ["GET", "POST"])]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -51,8 +59,8 @@ class AdminController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route('/register', name: 'admin_admins_register', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_FIRST_ADMIN')]
+    #[Route('/register', name: 'admin_register', methods: ['GET', 'POST'])]
+    #[IsGranted("IS_FIRST_ADMIN")]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator, EntityManagerInterface $em): Response
     {
         $user = new Admin();

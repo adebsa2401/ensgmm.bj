@@ -71,7 +71,7 @@ class StudentController extends AbstractController
         return new Response;
     }
 
-    #[Route('/register', name: 'app_students_register', methods: ['GET', 'POST'])]
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     #[IsGranted('IS_ANONYMOUS')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, StudentAuthenticator $authenticator, EntityManagerInterface $em): Response
     {

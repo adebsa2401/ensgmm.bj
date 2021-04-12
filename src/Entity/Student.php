@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use App\Traits\HasUuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,13 +17,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Student implements UserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
+    use HasUuid;
+    
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -72,11 +68,6 @@ class Student implements UserInterface
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getEmail(): ?string
