@@ -3,11 +3,17 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Article;
+use App\Entity\Comment;
+use App\Form\ArticleCreationFormType;
 use App\Repository\ArticleRepository;
+use App\Service\ConfirmCriticAction;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 #[Route("/admin/articles")]
 class AdminArticleController extends AbstractController
@@ -24,45 +30,50 @@ class AdminArticleController extends AbstractController
 
     #[Route("/create", name: "admin_articles_create", methods: ["GET", "POST"])]
     #[IsGranted("ROLE_WRITER")]
-    public function create(): Response {
-        return new Response;
+    public function create(Request $request, EntityManagerInterface $em): Response {
+        $article = new Article;
+
+        $form = $this->createForm(ArticleCreationFormType::class, $article);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $article->setCreatedBy($this->getUser());
+            $em->persist($article);
+            $em->flush();
+
+            return $this->redirectToRoute('admin_articles_home');
+        }
+
+        return $this->render(self::TEMPLATES_ROUTE_BASE.'create.html.twig', ['form' => $form->createView()]);
+    }
+
+    #[Route("/{id}", name: "admin_articles_show", methods: ["GET"])]
+    #[Route("/{id}", name: "admin_articles_edit", methods: ["PUT"])]
+    #[IsGranted("ARTICLE_EDIT", "aricle")]
+    #[Route("/{id}", name: "admin_articles_delete", methods: ["DELETE"])]
+    #[IsGranted("ARTICLE_DELETE", "article")]
+    public function show(Article $article, Request $request, ConfirmCriticAction $confirm): Response {
+        $form = $confirm->makeAction($article);
+
+        return $this->render(self::TEMPLATES_ROUTE_BASE.'show.html.twig', [
+            'article' => $article,
+            'confirm_form' => $form
+        ]);
     }
 
     /**
-     * Edit an article if granted required authorisation
-     * 
-     * @Route("/{id}/edit", name="admin_articles_edit", methods={"GET", "PUT"})
-     * @IsGranted("ARTICLE_EDIT", "aricle")
+     * @return JsonResponse
      */
-    public function edit(Article $article): Response {
-        return new Response;
-    }
+    #[Route("/{id}/comment", name: "admin_articles_comment", methods: ["POST"])]
+    public function comment(Article $article, Request $request, EntityManagerInterface $em): Response {
+        $comment = (new Comment)
+            ->setArticle($article)
+            ->setCreatedByAdmin($this->getUser())
+            ->setContent($request->request->get('comment'));
 
-    /**
-     * Show a given article
-     * 
-     * @Route("/{id}", name="admin_articles_show", methods={"GET"})
-     */
-    public function show(): Response {
-        return new Response;
-    }
+        $em->persist($comment);
+        $em->flush();
 
-    /**
-     * Create Comment entity for a given article
-     * 
-     * @Route("/{id}/comment", name="admin_articles_comment", methods={"POST"})
-     */
-    public function comment(): Response {
-        return new Response;
-    }
-
-    /**
-     * Delete a given article if granted required authorisation
-     * 
-     * @Route("/{id}", name="admin_articles_delete", methods={"DELETE"})
-     * @IsGranted("ARTICLE_DELETE", "article")
-     */
-    public function delete(Article $article): Response {
-        return new Response;
+        return new JsonResponse($comment);
     }
 }

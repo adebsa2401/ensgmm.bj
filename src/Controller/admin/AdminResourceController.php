@@ -3,14 +3,16 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Resource;
+use App\Form\ResourceCreationFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("/admin/resources")
- */
+#[Route("/admin/resources")]
 class AdminResourceController extends AbstractController
 {
     public const TEMPLATES_ROUTE_BASE = 'admin/resource/';
@@ -25,40 +27,53 @@ class AdminResourceController extends AbstractController
         ]);
     }
 
-    /**
-     * create a resource
-     * 
-     * @Route("/create", name="admin_resources_create", methods={"GET", "POST"})
-     */
-    public function create():Response {
-        return new Response;
+    #[Route("/create", name: "admin_resources_create", methods: ["GET", "POST"])]
+    public function create(Request $request, EntityManagerInterface $em):Response {
+        $resource = new Resource;
+
+        $form = $this->createForm(ResourceCreationFormType::class, $resource);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $em->persist($resource);
+            $em->flush();
+        }
+
+        return $this->render(self::TEMPLATES_ROUTE_BASE.'create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * show a resource
-     * 
-     * @Route("/{id}", name="admin_resources_show", methods={"GET"})
+     * @return JsonResponse
      */
-    public function show():Response {
-        return new Response;
+    #[Route("/{id}", name: "admin_resources_show", methods: ["GET"])]
+    public function show(Resource $resource):Response {
+        return new JsonResponse($resource);
     }
 
     /**
-     * edit a resource
-     * 
-     * @Route("/{id}/edit", name="admin_resources_edit", methods={"GET", "PUT"})
+     * @return JsonResponse
      */
-    public function edit(Resource $resource):Response {
-        return new Response;
+    #[Route("/{id}", name: "admin_resources_edit", methods: ["PUT"])]
+    public function edit(Resource $resource, Request $request, EntityManagerInterface $em) {
+        // set the new resource
+
+        $em->persist($resource);
+        $em->flush();
+
+        return new JsonResponse($resource);
     }
 
     /**
-     * delete a resource if granted required authorisation
-     * 
-     * @Route("/{id}", name="admin_resources_delete", methods={"DELETE"})
-     * @IsGranted("RESOURCE_DELETE", "resource")
+     * @return JsonResponse
      */
-    public function delete(Resource $resource):Response {
-        return new Response;
+    #[Route("/{id}", name: "admin_resources_delete", methods: ["DELETE"])]
+    #[IsGranted("RESOURCE_DELETE", "resource")]
+    public function delete(Resource $resource, EntityManagerInterface $em) {
+        $em->remove($resource);
+        $em->flush();
+
+        return new JsonResponse($resource);
     }
 }

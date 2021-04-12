@@ -12,6 +12,8 @@ use App\Form\StudentRegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\StudentAuthenticator;
 use App\Repository\StudentRepository;
+use App\Service\ConfirmCriticAction;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mime\Address;
@@ -71,7 +73,7 @@ class StudentController extends AbstractController
 
     #[Route('/register', name: 'app_students_register', methods: ['GET', 'POST'])]
     #[IsGranted('IS_ANONYMOUS')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, StudentAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, StudentAuthenticator $authenticator, EntityManagerInterface $em): Response
     {
         $user = new Student();
         $form = $this->createForm(StudentRegistrationFormType::class, $user);
@@ -86,9 +88,8 @@ class StudentController extends AbstractController
                 )
             );
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $em->persist($user);
+            $em->flush();
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
@@ -119,13 +120,13 @@ class StudentController extends AbstractController
         $id = $request->get('id');
 
         if (null === $id) {
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_students_register');
         }
 
         $user = $studentRepository->find($id);
 
         if (null === $user) {
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_students_register');
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists
@@ -134,41 +135,26 @@ class StudentController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_students_register');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_students_register');
     }
 
-    /**
-     * edit student user account
-     * 
-     * @Route("/{id}/profile/edit", name="app_students_edit_profile", methods={"GET", "PUT"})
-     * @IsGranted("STUDENT_EDIT", "student")
-     */
-    public function edit(Student $student):Response {
-        return new Response;
-    }
+    #[Route("/{id}/profile", name: "app_students_show_profile", methods: ["GET"])]
+    #[Route("/{id}/profile", name: "app_students_edit_profile", methods: ["PUT"])]
+    #[IsGranted("STUDENT_EDIT", "student")]
+    #[Route("/{id}/profile", name: "app_students_delete", methods: ["DELETE"])]
+    #[IsGranted("STUDENT_DELETE", "student")]
+    public function show(Student $student, ConfirmCriticAction $confirm):Response {
+        $form = $confirm->makeAction($student);
 
-    /**
-     * show student profile
-     * 
-     * @Route("/{id}/profile", name="app_students_show_profile", methods={"GET"})
-     */
-    public function show():Response {
-        return new Response;
-    }
-
-    /**
-     * delete student user account if granted required authorisation
-     * 
-     * @Route("/{id}/delete", name="app_students_delete", methods={"DELETE"})
-     * @IsGranted("STUDENT_DELETE", "student")
-     */
-    public function delete(Student $student):Response {
-        return new Response;
+        return $this->render(self::TEMPLATES_ROUTE_BASE.'show.html.twig', [
+            'student' => $student,
+            'confirm_form' => $form
+        ]);
     }
 }

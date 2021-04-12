@@ -2,11 +2,15 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Article;
 use App\Entity\Comment;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin/articles/{article_id}/comments")
@@ -26,31 +30,36 @@ class AdminCommentController extends AbstractController
     }
 
     /**
-     * Edit a comment if granted required athorisation
-     * 
-     * @Route("/{comment_id}/edit", name="admin_comments_edit", methods={"GET", "PUT"})
-     * @IsGranted("EDIT_COMMENT", "comment")
+     * @return JsonResponse
      */
-    public function edit(Comment $comment): Response {
-        return new Response;
+    #[Route("/{comment_id}", name: "admin_comments_show", methods: ["GET"])]
+    public function show(Article $article, Comment $comment): Response {
+        return new JsonResponse($comment);
     }
 
     /**
-     * show a given comment
-     * 
-     * @Route("/{comment_id}", name="admin_comments_show", methods={"GET"})
+     * @return JsonResponse
      */
-    public function show(): Response {
-        return new Response;
+    #[Route("/{comment_id}", name: "admin_comments_edit", methods: ["PUT"])]
+    #[IsGranted("EDIT_COMMENT", "comment")]
+    public function edit(Article $article, Comment $comment,Request $request, EntityManagerInterface $em): Response {
+        // set new comment
+
+        $em->persist($comment);
+        $em->flush();
+
+        return new JsonResponse($comment);
     }
 
     /**
-     * delete a comment if granted required authorisation
-     * 
-     * @Route("/{comment_id}", name="admin_comments_delete", methods={"DELETE"})
-     * @IsGranted("DELETE_COMMENT", "comment")
+     * @return JsonResponse
      */
-    public function delete(Comment $comment): Response {
-        return new Response;
+    #[Route("/{comment_id}", name: "admin_comments_delete", methods: ["DELETE"])]
+    #[IsGranted("DELETE_COMMENT", "comment")]
+    public function delete(Article $article, Comment $comment, EntityManagerInterface $em) {
+        $em->remove($comment);
+        $em->flush();
+
+        return new JsonResponse($comment);
     }
 }

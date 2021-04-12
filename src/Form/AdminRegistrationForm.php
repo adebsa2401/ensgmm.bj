@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Student;
+use App\Entity\Admin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -12,14 +12,13 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class StudentRegistrationFormType extends AbstractType
+class AdminRegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
-            ->add('matricule', TextType::class)
             ->add('email', EmailType::class)
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
@@ -55,7 +54,7 @@ class StudentRegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Student::class,
+            'data_class' => Admin::class,
         ]);
     }
 }

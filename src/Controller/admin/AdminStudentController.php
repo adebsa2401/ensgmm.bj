@@ -2,14 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Student;
+use App\Service\ConfirmCriticAction;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @Route("/admin/students")
- */
+#[Route("/admin/students")]
 class AdminStudentController extends AbstractController
 {
     public const TEMPLATES_ROUTE_BASE = 'admin/student/';
@@ -24,33 +24,18 @@ class AdminStudentController extends AbstractController
         ]);
     }
 
-    /**
-     * edit a student account settings if granted required authorisation
-     * 
-     * @Route("/{id}/edit", name="admin_students_edit", methods={"GET", "PUT"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function edit():Response {
-        return new Response;
-    }
-
-    /**
-     * show a student profile
-     * 
-     * @Route("/{id}", name="admin_students_show", methods={"GET"})
-     */
-    public function show():Response {
-        return new Response;
-    }
-
-    /**
-     * delete an student account if granted required authorisation
-     * 
-     * @Route("/{id}", name="admin_students_delete", methods={"DELETE"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function delete():Response {
-        return new Response;
+    #[Route("/{id}", name: "admin_students_show", methods: ["GET"])]
+    #[Route("/{id}", name: "admin_students_edit", methods: ["PUT"])]
+    #[IsGranted("ROLE_ADMIN")]
+    #[Route("/{id}", name: "admin_students_delete", methods: ["DELETE"])]
+    #[IsGranted("ROLE_ADMIN")]
+    public function show(Student $student, ConfirmCriticAction $confirm):Response {
+        $form = $confirm->makeAction($student);
+        
+        return $this->render(self::TEMPLATES_ROUTE_BASE.'show.html.twig', [
+            'student' => $student,
+            'confirm_form' => $form->createView()
+        ]);
     }
 
     /**
