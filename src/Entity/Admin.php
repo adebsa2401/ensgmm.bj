@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
+use App\Service\SecuredUserInterface;
 use App\Traits\HasUuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields = {"email"}, message ="An account already exists with this email address")
  * @ORM\Table(name="admins")
  */
-class Admin implements UserInterface
+class Admin implements SecuredUserInterface
 {
     use HasUuid;
 

@@ -10,16 +10,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Form\StudentRegistrationFormType;
 use App\Security\EmailVerifier;
-use App\Security\StudentAuthenticator;
 use App\Repository\StudentRepository;
 use App\Service\ConfirmCriticAction;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\UserRegister;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 /**
@@ -65,40 +60,19 @@ class StudentController extends AbstractController
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     #[IsGranted('IS_ANONYMOUS')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, StudentAuthenticator $authenticator, EntityManagerInterface $em): Response
+    public function register(Request $request, UserRegister $userRegister): Response
     {
         $user = new Student();
         $form = $this->createForm(StudentRegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $em->persist($user);
-            $em->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('ensgmm@gmail.com', 'ENSGMM team'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate(self::TEMPLATES_ROUTE_BASE.'confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-
-            return $guardHandler->authenticateUserAndHandleSuccess(
+            $user = $userRegister->registerAndSendEmailConfirmation(
                 $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+                $form->get('plainPassword')->getData(),
+                self::TEMPLATES_ROUTE_BASE.'confirmation_email.html.twig');
+
+            return $userRegister->authenticate($user);
         }
 
         return $this->render(self::TEMPLATES_ROUTE_BASE.'register.html.twig', [

@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use App\Service\SecuredUserInterface;
 use App\Traits\HasUuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields = {"email", "matricule"}, message ="This identifier is already in use")
  * @ORM\Table(name="students")
  */
-class Student implements UserInterface
+class Student implements SecuredUserInterface
 {
     use HasUuid;
     

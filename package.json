@@ -1,0 +1,29 @@
+{
+    "devDependencies": {
+        "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/webpack-encore": "^1.0.0",
+        "core-js": "^3.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "stimulus": "^2.0.0",
+        "webpack-notifier": "^1.6.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "animate.min.css": "0.0.3",
+        "bootstrap": "^5.0.0-beta3",
+        "bootstrap-icons": "^1.4.1",
+        "boxicons": "^2.0.7",
+        "glightbox": "^3.0.8",
+        "isotope-layout": "^3.0.6",
+        "remixicon": "^2.5.0",
+        "swiper": "^6.5.6",
+        "waypoints": "^4.0.1"
+    }
+}

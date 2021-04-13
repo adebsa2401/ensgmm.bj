@@ -3,25 +3,20 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Admin;
-use App\Entity\AdminRequest;
 use App\Form\AdminLoginFormType;
 use App\Form\AdminRegistrationFormType;
 use App\Repository\AdminRepository;
-use App\Security\AdminAuthenticator;
+use App\Repository\AdminRequestRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfirmCriticAction;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UserRegister;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 #[Route("/admin")]
@@ -55,62 +50,27 @@ class AdminController extends AbstractController
         ]);
     }
 
-    /**
-     * @IsGranted("IS_FIRST_ADMIN")
-     */
-    #[Route('/register', name: 'admin_register', methods: ['GET', 'POST'])]
-    public function registerFirstAdmin(Request $request, UserPasswordEncoderInterface $passwordEncoder,
-        GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator,
-        EntityManagerInterface $em): Response
+    #[Route('/register', name: 'admin_admins_register', methods: ['GET', 'POST'])]
+    public function registerAdmin(Request $request, AdminRequestRepository $adminRequestRepo, UserRegister $userRegister): Response
     {
-        $user = new Admin;
-
-        $form = $this->createForm(AdminRegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $user->setRoles(['ROLE_SUPER_ADMIN']);
-
-            $em->persist($user);
-            $em->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('ensgmm@gmail.com', 'ENSGMM team'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate(self::TEMPLATES_ROUTE_BASE.'confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+        /**
+         * if there's a admin-request-id parameter in request parameters
+         * execute the controller only if it's the first admin to get registered
+         */
+        if(!$adminRequestId = $request->query->get('admin-request-id')) {
+            $this->denyAccessUnlessGranted('IS_FIRST_ADMIN');
         }
 
-        return $this->render(self::TEMPLATES_ROUTE_BASE.'register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
-    }
+        /**
+         * if there's a admin-request-id parameter execute the controller
+         * only if this id is valid
+         */
+        if($adminRequestId) {
+            $adminRequest = $adminRequestRepo->findOneBy(['id' => $adminRequestId]);
 
-    #[Route('/register/{request_id}', name: 'admin_register', methods: ['GET', 'POST'])]
-    public function registerAdmin(AdminRequest $adminRequest, Request $request,
-        UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em,
-        GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator): Response {
-        if(!$adminRequest->isApproved()) {
-            throw new NotFoundHttpException;
+            if(!$adminRequest || !$adminRequest->isApproved()) {
+                throw new NotFoundHttpException('Invalid url link');
+            }
         }
 
         $user = new Admin;
@@ -119,33 +79,13 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $em->persist($user);
-            $em->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('ensgmm@gmail.com', 'ENSGMM team'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate(self::TEMPLATES_ROUTE_BASE.'confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-
-            return $guardHandler->authenticateUserAndHandleSuccess(
+            $user = $userRegister->registerAndSendEmailConfirmation(
                 $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+                $form->get('plainPassword')->getData(),
+                self::TEMPLATES_ROUTE_BASE.'confirmation_email.html.twig',
+                $adminRequest ? [] : ['ROLE_SUPER_ADMIN']);
+
+            return $userRegister->authenticate($user);
         }
 
         return $this->render(self::TEMPLATES_ROUTE_BASE.'register.html.twig', [

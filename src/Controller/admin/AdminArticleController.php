@@ -52,7 +52,7 @@ class AdminArticleController extends AbstractController
     #[IsGranted("ARTICLE_EDIT", "aricle")]
     #[Route("/{id}", name: "admin_articles_delete", methods: ["DELETE"])]
     #[IsGranted("ARTICLE_DELETE", "article")]
-    public function show(Article $article, Request $request, ConfirmCriticAction $confirm): Response {
+    public function show(Article $article, ConfirmCriticAction $confirm): Response {
         $form = $confirm->makeAction($article);
 
         return $this->render(self::TEMPLATES_ROUTE_BASE.'show.html.twig', [
