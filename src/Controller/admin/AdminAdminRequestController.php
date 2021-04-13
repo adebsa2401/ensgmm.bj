@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('admin/admin-requests')]
+#[Route('/admin/admin-requests')]
 class AdminAdminRequestController extends AbstractController
 {
     #[Route('/', name: 'admin_admin_requests')]
@@ -17,8 +17,13 @@ class AdminAdminRequestController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'admin_admin_requests_?', methods: ['GET'])]
+    #[Route('/{id}', name: 'admin_admin_requests_approve', methods: ['POST'])]
     public function approve(): Response {
+        return new Response;
+    }
+
+    #[Route('/{id}', name: 'admin_admin_requests_delete', methods: ['DELETE'])]
+    public function delete(): Response {
         return new Response;
     }
 }
